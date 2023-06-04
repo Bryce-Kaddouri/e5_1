@@ -62,37 +62,6 @@ class _FocusSeanceState extends State<FocusSeance> {
     );
   }
 
-  List<XFile>? _imageFileList;
-  void _setImageFileListFromFile(XFile? value) {
-    _imageFileList = value == null ? null : <XFile>[value];
-  }
-
-  dynamic _pickImageError;
-  bool isVideo = false;
-  String? _retrieveDataError;
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _pickImage(ImageSource source) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-    final XFile? galleryVideo =
-        await _picker.pickVideo(source: ImageSource.gallery);
-    final XFile? cameraVideo =
-        await _picker.pickVideo(source: ImageSource.camera);
-
-    print('image: $image');
-
-    // XFile? selected;
-    // try {
-    //   selected = await _picker.pickImage(source: source);
-    // } catch (e) {
-    //   _pickImageError = e;
-    // }
-    // setState(() {
-    //   _setImageFileListFromFile(selected);
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -553,26 +522,12 @@ class _FocusSeanceState extends State<FocusSeance> {
                           },
                           controller: _nbRepController,
                           decoration: InputDecoration(
-                            labelText: 'nb Rep',
+                            labelText: 'Nombre de répétitions',
                           ),
                         ),
                         // row ajouter un image avec un bouton qui ouvre un dialof
                         // pour choisir une image dans la gallerie
                         // et un bouton qui ouvre un dialof pour prendre une photo
-
-                        ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: FilePickerDemo(),
-                                );
-                              },
-                            );
-                          },
-                          child: const Text('Ajouter'),
-                        ),
 
                         TextFormField(
                           controller: _poidsController,

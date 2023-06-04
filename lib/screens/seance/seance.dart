@@ -68,17 +68,42 @@ class _SeancePageState extends State<SeancePage> {
       body: StreamBuilder<QuerySnapshot>(
         stream: usersStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Center(child: CircularProgressIndicator());
+            default:
+              if (snapshot.hasError) {
+                return const Text('Erreur de connexion');
+              } else {
+                if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                  print(snapshot.data!.docs);
+                  return Body(snapshot: snapshot, uid: widget.uid);
+                } else {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Vous n\'avez pas encore de séance',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Ajoutez en une en cliquant sur le bouton +',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              }
           }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          return Body(snapshot: snapshot, uid: widget.uid);
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -127,6 +152,7 @@ class _SeancePageState extends State<SeancePage> {
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 10,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
